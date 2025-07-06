@@ -1,0 +1,152 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume – Tamer Hamad Faour</title>
+  <!-- ربط ملف CSS الرئيسي لتنسيق الصفحة -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/print.css" media="print">
+  <link rel="stylesheet" href="styles/print-toolbar.css">
+  <style id="dynamic-preview-style">
+  body {
+    font-family: Georgia, serif;
+    font-size: 14pt;
+    line-height: 1.5;
+    word-spacing: 0pt;
+  }
+</style>
+
+
+</head>
+<body>
+
+<!-- 🎛️ شريط إعدادات الطباعة -->
+<!-- 🎛️ شريط إعدادات الطباعة -->
+<div id="print-toolbar" class="print-toolbar no-print">
+  <div class="toolbar-item">
+    <label for="font-family">نوع الخط:</label>
+    <select id="font-family">
+      <option value="Georgia">Georgia</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Arial">Arial</option>
+      <option value="Tahoma">Tahoma</option>
+    </select>
+  </div>
+
+  <div class="toolbar-item">
+    <label for="font-size">حجم الخط:</label>
+    <input id="font-size" type="number" value="14" min="8" max="32"> pt
+  </div>
+
+  <div class="toolbar-item">
+  <label for="block-spacing">المسافة بين العناصر:</label>
+  <input id="block-spacing" type="number" value="8" min="0" max="50" step="1"> px
+</div>
+
+
+  <div class="toolbar-item">
+    <label for="line-height">ارتفاع السطر:</label>
+    <input id="line-height" type="number" value="1.5" min="1" max="3" step="0.1">
+  </div>
+
+  <div class="toolbar-item">
+    <label for="word-spacing">تباعد الكلمات:</label>
+    <input id="word-spacing" type="number" value="3" min="0" max="10" step="0.5"> pt
+  </div>
+
+  <div class="toolbar-item">
+    <label for="margin-top">الهامش العلوي:</label>
+    <input id="margin-top" type="number" value="3" step="0.1"> cm
+  </div>
+  <div class="toolbar-item">
+    <label for="margin-bottom">الهامش السفلي:</label>
+    <input id="margin-bottom" type="number" value="3" step="0.1"> cm
+  </div>
+  <div class="toolbar-item">
+    <label for="margin-left">الهامش الأيسر:</label>
+    <input id="margin-left" type="number" value="3" step="0.1"> cm
+  </div>
+  <div class="toolbar-item">
+    <label for="margin-right">الهامش الأيمن:</label>
+    <input id="margin-right" type="number" value="3" step="0.1"> cm
+  </div>
+
+  <div class="toolbar-actions">
+    <button onclick="applyPrintSettings()">✅ تطبيق</button>
+    <button onclick="window.print()">🖨️ طباعة</button>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- الحاوية الرئيسية التي تحتوي على جميع أقسام السيرة الذاتية -->
+<div class="container">
+
+  <!-- العنوان الرئيسي للسيرة الذاتية -->
+  <h1>
+    <!-- عنوان يمكن تعديله من قبل المستخدم -->
+    <span id="main-title">RESUME</span>
+    <!-- زر تعديل العنوان -->
+    <span class="edit-button">
+      <button data-edit="main-title">✏️</button>
+    </span>
+  </h1>
+
+  <!-- قسم الصورة الشخصية -->
+  <div>
+    <table style="width: 100%; margin-bottom: 10px;">
+      <tr>
+        <td style="text-align: center;">
+          <!-- صورة الملف الشخصي -->
+          <img src="../../assets/default-profile.jpg" alt="Profile Picture" class="profile-pic" id="profile-pic">
+          <!-- زر تعديل الصورة -->
+          <div class="edit-button no-print" style="margin-top: 5px;">
+            
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- زر لإضافة قسم جديد في العمود الأيسر -->
+    <div style="text-align: right; margin-bottom: 10px;" class="no-print">
+      <button id="add-left-section">➕ Add Main Section</button>
+    </div>
+
+    <!-- العمود الأيسر: مخصص للمعلومات العامة مثل البيانات الشخصية والمهارات -->
+    <div class="left-column"></div>
+  </div>
+
+  <!-- قسم المشاريع (العمود الأيمن غالبًا) -->
+  <div>
+    <!-- زر لإضافة قسم مشاريع جديد -->
+    <div style="text-align: right; margin-bottom: 10px;" class="no-print">
+      <button id="add-project-section">➕ Add Main Section</button>
+    </div>
+
+    <!-- الحاوية الأساسية لمشاريع المستخدم -->
+    <div id="projects-section-1">
+      <!-- يمكن إضافة المشاريع ديناميكياً هنا -->
+
+    </div>
+  </div>
+
+</div>
+
+<!-- أزرار التحكم في أسفل الصفحة: طباعة، حفظ، إعادة تعيين -->
+<div style="text-align: center; margin: 20px;" class="no-print">
+  <button id="print-btn" onclick="printPage()">🖨️ Print Page</button>
+  <button id="save-btn" onclick="saveToLocalStorage()">💾 Save Changes</button>
+  <button id="clear-btn" onclick="clearStorage()">🧹 Reset</button>
+</div>
+
+<!-- استدعاء ملف JavaScript لحفظ البيانات وتعديل النصوص -->
+<script src="save.js"></script>
+<script src="print.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<div class="md-footer">
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner">
+      {% if config.extra.generator %}
+        <div class="md-footer-copyright">
+          Made with <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>
+        </div>
+      {% endif %}
+      {% if config.extra.copyright %}
+        <div class="md-footer-copyright">
+          {{ config.extra.copyright | safe }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+.print-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: #f0f0f0;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 900px;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-family: "Arial", sans-serif;
+}
+
+.print-toolbar .toolbar-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 180px;
+}
+
+.print-toolbar .toolbar-item label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.print-toolbar .toolbar-item input,
+.print-toolbar .toolbar-item select {
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 80px;
+}
+
+.print-toolbar .toolbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
