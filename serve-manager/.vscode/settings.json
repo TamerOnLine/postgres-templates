@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": "serve-manager"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "serve-manager:python.defaultInterpreterPath": "serve-manager/venv/Scripts/python.exe",
+    "python.defaultInterpreterPath": "venv/Scripts/python.exe"
+  }
+}
