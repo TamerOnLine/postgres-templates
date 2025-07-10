@@ -1,7 +1,7 @@
 # models/user.py
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP, func
-from models import Base
+from db.models.base import Base  # ✅ احرص أن الاستيراد يتم من base فقط
 
 class User(Base):
     __tablename__ = 'users'
@@ -10,3 +10,4 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
+

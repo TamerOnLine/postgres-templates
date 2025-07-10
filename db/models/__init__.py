@@ -1,7 +1,14 @@
-from sqlalchemy.orm import declarative_base
+# db/models/__init__.py
 
-Base = declarative_base()
+from db.models.base import Base  # ✅ استيراد Base فقط من base.py بدون إعادة تعريف
 
-# ✅ اجعل جميع الموديلات تستورد Base من هنا
 from .user import User
-# يمكنك إضافة جميع الموديلات الأخرى هنا بنفس الشكل
+from .template import Template
+from .section import Section
+from .project import Project
+from .item import Item
+from .print_settings import PrintSettings
+from .user_item_settings import UserItemSettings
+from .user_project_settings import UserProjectSettings
+from .user_section_settings import UserSectionSettings
+from .user_template_print_settings import UserTemplatePrintSettings
