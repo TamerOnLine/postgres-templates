@@ -19,7 +19,7 @@ A portable, self-contained server management module designed to control resume t
 
 ```
 serve-manager/
-├── start.py                 # Dynamic entry point
+├── setup.py                 # Dynamic entry point
 ├── main.py                  # FastAPI app (optional Flask)
 ├── serve-config.json        # Contains selected template and environment setup
 ├── templates/
@@ -51,7 +51,7 @@ serve-manager/
 
 ```bash
 # Inside the serve-manager directory
-python start.py
+python setup.py
 ```
 
 By default, the server will run at [http://127.0.0.1:5500](http://127.0.0.1:5500) and load the interface to control templates and content dynamically.
