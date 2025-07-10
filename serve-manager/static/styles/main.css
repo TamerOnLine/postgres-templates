@@ -1,0 +1,38 @@
+/* main.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.project-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-row {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.project-name {
+  font-weight: bold;
+  flex: 1;
+  min-width: 200px;
+}
+
+.project-controls {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}

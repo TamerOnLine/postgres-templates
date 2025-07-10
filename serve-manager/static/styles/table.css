@@ -1,0 +1,85 @@
+.project-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-left: 5px solid #4CAF50;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.project-card:hover {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  border-left-color: #2ecc71;
+}
+
+.project-card h3 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.project-details {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.project-details p {
+  margin: 4px 0;
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.project-actions button,
+.project-actions a {
+  padding: 8px 14px;
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.start { background-color: #2ecc71; }
+.start:hover { background-color: #27ae60; }
+
+.stop { background-color: #e67e22; }
+.stop:hover { background-color: #d35400; }
+
+.restart { background-color: #f1c40f; color: #222; }
+.restart:hover { background-color: #f39c12; }
+
+.edit { background-color: #3498db; }
+.edit:hover { background-color: #2980b9; }
+
+.delete { background-color: #e74c3c; }
+.delete:hover { background-color: #c0392b; }
+
+.open { background-color: #9b59b6; }
+.open:hover { background-color: #8e44ad; }
+
+.status-stopped {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: #fbeaea;
+  color: #c0392b;
+}
+
+.status-stopped.running {
+  background-color: #eafaf1;
+  color: #27ae60;
+}

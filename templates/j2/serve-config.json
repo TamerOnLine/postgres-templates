@@ -1,16 +1,10 @@
 [
   {
+    "id": 1,
     "name": "Two Column Resume",
     "type": "html-server",
     "path": "../templates/two-column-dynamic",
     "entry": ".",
     "port": 7001
-  },
-  {
-    "name": "j2",
-    "type": "html-server",
-    "path": "../templates/j2",
-    "entry": ".",
-    "port": 7011
   }
 ]

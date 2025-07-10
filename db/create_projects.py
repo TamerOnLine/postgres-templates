@@ -1,4 +1,16 @@
+def table_exists(cur, name):
+    cur.execute("""
+        SELECT EXISTS (
+            SELECT FROM information_schema.tables 
+            WHERE table_schema = 'public' AND table_name = %s
+        );
+    """, (name,))
+    return cur.fetchone()[0]
+
 def create_projects_table(cur):
+    table_name = 'projects'
+    exists = table_exists(cur, table_name)
+
     cur.execute("""
         CREATE TABLE IF NOT EXISTS projects (
             id SERIAL PRIMARY KEY,
@@ -16,3 +28,8 @@ def create_projects_table(cur):
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
+
+    if exists:
+        print(f"ℹ️ Table '{table_name}' already exists.")
+    else:
+        print(f"✅ Table '{table_name}' was created.")

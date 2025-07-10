@@ -346,3 +346,31 @@ def export_projects_to_json():
         json.dump(data, f, indent=2, ensure_ascii=False)
 
     print("✅ serve-config.json updated.")
+
+
+import json
+
+def save_config(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name, type, path, entry, port FROM projects")
+    rows = cursor.fetchall()
+
+    config = []
+    for row in rows:
+        config.append({
+            "id": row[0],
+            "name": row[1],
+            "type": row[2],
+            "path": row[3],
+            "entry": row[4],
+            "port": row[5],
+        })
+
+    with open("serve-config.json", "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+
+    cursor.close()
+
+
+def get_db_connection():
+    return sqlite3.connect(DB_PATH)

@@ -7,16 +7,18 @@ def table_exists(cur, name):
     """, (name,))
     return cur.fetchone()[0]
 
-def create_users_table(cur):
-    table_name = 'users'
+def create_user_section_settings_table(cur):
+    table_name = 'user_section_settings'
     exists = table_exists(cur, table_name)
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS user_section_settings (
             id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            section_id INTEGER REFERENCES sections(id) ON DELETE CASCADE,
+            print_visible BOOLEAN DEFAULT TRUE,
+            order_index INTEGER,
+            UNIQUE(user_id, section_id)
         );
     """)
 
