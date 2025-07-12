@@ -1,18 +1,23 @@
-# models/template.py
+# db/models/template.py
 
 from sqlalchemy import Column, Integer, Text, Boolean
-from db.models.base import Base
 from sqlalchemy.orm import relationship
-
+from db.models.base import Base
 
 class Template(Base):
     __tablename__ = "templates"
 
+    # 🔑 Primary Key
     id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    path = Column(Text)
+
+    # 📄 Template Details
+    name       = Column(Text)
+    path       = Column(Text)
     is_default = Column(Boolean, default=False)
 
+    # 🔗 Relationships
     user_settings = relationship(
-    "UserTemplatePrintSettings", back_populates="template", cascade="all, delete-orphan"
-)
+        "UserTemplatePrintSettings",
+        back_populates="template",
+        cascade="all, delete-orphan"
+    )

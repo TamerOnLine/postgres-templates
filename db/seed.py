@@ -1,5 +1,12 @@
+
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+
 from sqlalchemy.orm import Session
+
 from db.config import SessionLocal
 from db.models import (
     User, Template, UserTemplatePrintSettings,
@@ -7,22 +14,29 @@ from db.models import (
 )
 
 def seed_database():
+    """
+    Seed the database with initial data for testing or development.
+
+    This function creates a sample user, a template, print settings,
+    a section, and two projects. It uses SQLAlchemy ORM for database
+    operations and commits each step to ensure data integrity.
+    """
     db: Session = SessionLocal()
 
-    # ✅ 1. مستخدم
+    # 1. Create a user
     user = User(name="Tamer", email="tamer@example.com")
     db.add(user)
     db.commit()
     db.refresh(user)
 
-    # ✅ 2. قالب
+    # 2. Create a resume template
     template = Template(name="Two Column Resume", path="two-column-dynamic", is_default=True)
     db.add(template)
     db.commit()
     db.refresh(template)
 
-    # ✅ 3. إعدادات طباعة
-    db.add(UserTemplatePrintSettings(
+    # 3. Set print settings for the user and template
+    print_settings = UserTemplatePrintSettings(
         user_id=user.id,
         template_id=template.id,
         font_family="Georgia",
@@ -34,15 +48,16 @@ def seed_database():
         margin_bottom="3cm",
         margin_left="3cm",
         margin_right="3cm"
-    ))
+    )
+    db.add(print_settings)
 
-    # ✅ 4. قسم
+    # 4. Create a section for projects
     section = Section(user_id=user.id, title="Projects", order_index=1)
     db.add(section)
     db.commit()
     db.refresh(section)
 
-    # ✅ 5. مشاريع
+    # 5. Add two project entries to the section
     project1 = Project(
         section_id=section.id,
         title="DeepClone",
@@ -73,9 +88,10 @@ def seed_database():
 
     db.add_all([project1, project2])
     db.commit()
-
     db.close()
-    print("✅ تم تعبئة قاعدة البيانات باستخدام SQLAlchemy!")
+
+    print("Database successfully seeded using SQLAlchemy.")
+
 
 if __name__ == "__main__":
     seed_database()

@@ -1,6 +1,6 @@
 # db/models/__init__.py
 
-from db.models.base import Base  # ✅ استيراد Base فقط من base.py بدون إعادة تعريف
+from db.models.base import Base  
 
 from .user import User
 from .template import Template
