@@ -374,3 +374,14 @@ def save_config(conn):
 
 def get_db_connection():
     return sqlite3.connect(DB_PATH)
+
+
+def get_templates_list():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name FROM templates")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return [{"id": row[0], "name": row[1]} for row in rows]

@@ -1,5 +1,7 @@
 import psycopg2
 import os
+import sqlite3
+
 from dotenv import load_dotenv
 
 # تحميل متغيرات البيئة
@@ -72,3 +74,14 @@ def get_sections_with_projects(user_id: int):
     except Exception as e:
         print("❌ Error getting sections/projects:", e)
         return []
+
+
+
+def get_template_path(template_id: int) -> str:
+    db_path = os.path.join(os.path.dirname(__file__), "projects.db")
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute("SELECT path FROM projects WHERE id = ?", (template_id,))
+    row = cur.fetchone()
+    conn.close()
+    return row[0] if row else "two-column-dynamic"

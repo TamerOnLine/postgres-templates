@@ -27,8 +27,8 @@ from controller import (
     get_db_connection  # ✅ أضف هذا
 )
 
-from db_utils import get_template_settings, get_sections_with_projects
-
+from db_utils import get_template_settings, get_sections_with_projects, get_template_path
+from fastapi.staticfiles import StaticFiles
 
 
 # 📁 تحميل المتغيرات البيئية
@@ -46,6 +46,7 @@ DB_PARAMS = {
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+#TEMPLATES_DIR = os.path.abspath(os.path.join(BASE_DIR, "../templates/two-column-dynamic"))
 
 # 🚀 إنشاء تطبيق FastAPI
 app = FastAPI()
@@ -53,6 +54,14 @@ app = FastAPI()
 # 📦 تحميل الملفات الثابتة والقوالب
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
+
+
+# 🧱 دعم تحميل ملفات CSS/JS من داخل كل القوالب تحت templates/*
+app.mount(
+    "/templates",
+    StaticFiles(directory=os.path.abspath(os.path.join(BASE_DIR, "..", "templates"))),
+    name="templates"
+)
 
 # 🌐 إعداد CORS
 app.add_middleware(
@@ -63,28 +72,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import sqlite3
+import os
+
+def get_templates_list():
+    db_path = os.path.join(os.path.dirname(__file__), "projects.db")
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute("SELECT id, name FROM projects")
+    templates = cur.fetchall()
+    conn.close()
+    return templates
+
+
+
 # 🏠 الصفحة الرئيسية
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-#    return templates.TemplateResponse("index.html", {"request": request})
-    
-    user_id = 1  # لاحقًا يمكن جعله ديناميكي
-    template_id = 1  # يفترض أن يكون معرف القالب Two Column Resume
-
-    # استدعاء إعدادات الطباعة لهذا المستخدم والقالب
-    print_settings = get_template_settings(user_id, template_id)
-
-    # استدعاء الأقسام والمشاريع
-    sections = get_sections_with_projects(user_id)
-
-    print("✅ SECTIONS FROM DB:", sections)
-    
-    return templates.TemplateResponse("index.html", {
+def list_templates(request: Request):
+    templates_list = get_templates_list()
+    return templates.TemplateResponse("select_template.html", {
         "request": request,
-        "print_settings": print_settings,
-        "sections": sections
+        "templates": templates_list
     })
-
 
 
 # 📄 عرض المشاريع
@@ -178,3 +187,22 @@ def get_print_settings():
         return JSONResponse(content=result)
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
+
+
+@app.get("/view/{template_id}", response_class=HTMLResponse)
+def view_template(request: Request, template_id: int):
+    user_id = 1
+    print_settings = get_template_settings(user_id, template_id)
+    sections = get_sections_with_projects(user_id)
+    template_folder = get_template_path(template_id)
+
+    dynamic_path = os.path.abspath(os.path.join(BASE_DIR, "..", "templates", template_folder))
+    dynamic_templates = Jinja2Templates(directory=dynamic_path)
+
+    return dynamic_templates.TemplateResponse("index.html", {
+        "request": request,
+        "print_settings": print_settings,
+        "sections": sections,
+        "template_folder": template_folder
+    })

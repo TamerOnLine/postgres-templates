@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Resume Templates</title>
+</head>
+<body>
+    <h1>🧩 Available Templates</h1>
+    <ul>
+        {% for tpl in templates %}
+            <li>
+                <a href="/view/{{ tpl[0] }}">{{ tpl[1] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
