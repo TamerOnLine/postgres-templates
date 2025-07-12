@@ -146,7 +146,7 @@ celerybeat.pid
 *.code-workspace
 
 # =========================
-# 🧾 ملفات مخصصة من المستخدم
+# 🧾 user-specific files
 # =========================
 gitingest.txt
 *info/
