@@ -35,5 +35,12 @@ class UserTemplatePrintSettings(Base):
     
     created_at = Column(TIMESTAMP, server_default=func.now())
 
-    user = relationship("User", back_populates="template_settings")
+    
     template = relationship("Template", back_populates="user_settings")
+
+    user = relationship(
+        "User",
+        back_populates="template_settings",
+        overlaps="template_print_settings"
+    )
+

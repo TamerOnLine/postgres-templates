@@ -16,7 +16,18 @@ class User(Base):
     item_settings = relationship("UserItemSettings", back_populates="user", cascade="all, delete-orphan")
     section_settings = relationship("UserSectionSettings", back_populates="user", cascade="all, delete-orphan")
     project_settings = relationship("UserProjectSettings", back_populates="user", cascade="all, delete-orphan")
-    template_print_settings = relationship("UserTemplatePrintSettings", back_populates="user", cascade="all, delete-orphan")
+    
+    template_print_settings = relationship(
+        "UserTemplatePrintSettings",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        overlaps="template_settings"
+    )
+
     template_settings = relationship(
-    "UserTemplatePrintSettings", back_populates="user", cascade="all, delete-orphan"
-)
+        "UserTemplatePrintSettings",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        overlaps="template_print_settings"
+    )
+
