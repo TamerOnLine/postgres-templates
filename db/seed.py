@@ -1,91 +1,81 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
-
-import psycopg2
-from datetime import datetime
-
-# الاتصال بقاعدة البيانات باستخدام متغيرات البيئة
-conn = psycopg2.connect(
-    dbname=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    host=os.getenv("DB_HOST"),
-    port=os.getenv("DB_PORT")
+from sqlalchemy.orm import Session
+from db.config import SessionLocal
+from db.models import (
+    User, Template, UserTemplatePrintSettings,
+    Section, Project
 )
 
-cur = conn.cursor()
+def seed_database():
+    db: Session = SessionLocal()
 
-# 🧩 1. إدخال قسم تجريبي
-cur.execute("""
-    INSERT INTO sections (name, print_visible, order_index)
-    VALUES (%s, %s, %s)
-    RETURNING id;
-""", ("Projects", True, 1))
-section_id = cur.fetchone()[0]
+    # ✅ 1. مستخدم
+    user = User(name="Tamer", email="tamer@example.com")
+    db.add(user)
+    db.commit()
+    db.refresh(user)
 
-# 🧩 2. إدخال مشروعين ضمن القسم
-projects = [
-    (
-        section_id,
-        "AI Resume Optimizer",
-        "A Python-based tool that uses NLP to tailor resumes to job descriptions.",
-        "OpenAI",
-        "https://github.com/tamer/ai-resume",
-        "2023-01",
-        "2023-06",
-        True,
-        "12pt",
-        "1.4",
-        1
-    ),
-    (
-        section_id,
-        "PostgreSQL Dashboard",
-        "A Flask web app to manage and visualize PostgreSQL data.",
-        "Tamer Tech",
-        "https://github.com/tamer/pg-dashboard",
-        "2022-05",
-        "2022-12",
-        True,
-        "11pt",
-        "1.3",
-        2
+    # ✅ 2. قالب
+    template = Template(name="Two Column Resume", path="two-column-dynamic", is_default=True)
+    db.add(template)
+    db.commit()
+    db.refresh(template)
+
+    # ✅ 3. إعدادات طباعة
+    db.add(UserTemplatePrintSettings(
+        user_id=user.id,
+        template_id=template.id,
+        font_family="Georgia",
+        font_size="14pt",
+        line_height="1.5",
+        word_spacing="3pt",
+        block_spacing="8px",
+        margin_top="3cm",
+        margin_bottom="3cm",
+        margin_left="3cm",
+        margin_right="3cm"
+    ))
+
+    # ✅ 4. قسم
+    section = Section(user_id=user.id, title="Projects", order_index=1)
+    db.add(section)
+    db.commit()
+    db.refresh(section)
+
+    # ✅ 5. مشاريع
+    project1 = Project(
+        section_id=section.id,
+        title="DeepClone",
+        description="Flask tool to extract GitHub folders",
+        company="Tamer Dev",
+        link="https://github.com/tamer/deepclone",
+        from_date="2025-07",
+        to_date="2025-08",
+        print_visible=True,
+        print_font_size="12pt",
+        print_line_height="1.4",
+        order_index=1
     )
-]
 
-cur.executemany("""
-    INSERT INTO projects (
-        section_id, title, description, company, link,
-        from_date, to_date, print_visible,
-        print_font_size, print_line_height, order_index
+    project2 = Project(
+        section_id=section.id,
+        title="AI Resume Optimizer",
+        description="Python app that tailors resumes using NLP",
+        company="OpenAI",
+        link="https://github.com/tamer/ai-resume",
+        from_date="2023-01",
+        to_date="2023-06",
+        print_visible=True,
+        print_font_size="11pt",
+        print_line_height="1.3",
+        order_index=2
     )
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-""", projects)
 
-# 🧩 3. إدخال قسم للمهارات
-cur.execute("""
-    INSERT INTO sections (name, print_visible, order_index)
-    VALUES (%s, %s, %s)
-    RETURNING id;
-""", ("Skills", True, 2))
-skills_section_id = cur.fetchone()[0]
+    db.add_all([project1, project2])
+    db.commit()
 
-skills = [
-    (skills_section_id, "Python", "Expert", True, "11pt", 1),
-    (skills_section_id, "PostgreSQL", "Advanced", True, "11pt", 2),
-    (skills_section_id, "Flask", "Advanced", True, "11pt", 3)
-]
+    db.close()
+    print("✅ تم تعبئة قاعدة البيانات باستخدام SQLAlchemy!")
 
-cur.executemany("""
-    INSERT INTO items (
-        section_id, label, value, print_visible, print_font_size, order_index
-    )
-    VALUES (%s, %s, %s, %s, %s, %s);
-""", skills)
-
-conn.commit()
-cur.close()
-conn.close()
-
-print("✅ تم إدخال بيانات تجريبية بنجاح.")
+if __name__ == "__main__":
+    seed_database()

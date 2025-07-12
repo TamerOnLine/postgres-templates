@@ -1,5 +1,6 @@
 # models/user_template_print_settings.py
-
+from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy import (
     Column,
     Integer,
@@ -33,3 +34,6 @@ class UserTemplatePrintSettings(Base):
     margin_right = Column(Text, default='3cm')
     
     created_at = Column(TIMESTAMP, server_default=func.now())
+
+    user = relationship("User", back_populates="template_settings")
+    template = relationship("Template", back_populates="user_settings")

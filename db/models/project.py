@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Text, TIMESTAMP, ForeignKey, func
 from db.models.base import Base
-
+from sqlalchemy.orm import relationship
 
 class Project(Base):
     __tablename__ = 'projects'
@@ -18,3 +18,8 @@ class Project(Base):
     print_line_height = Column(Text, default='1.2')
     order_index = Column(Integer, default=0)
     created_at = Column(TIMESTAMP, server_default=func.now())
+
+    
+    section = relationship("Section", back_populates="projects")
+    user_settings = relationship("UserProjectSettings", back_populates="project", cascade="all, delete-orphan")
+

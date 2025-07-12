@@ -27,6 +27,9 @@ from controller import (
     get_db_connection  # ✅ أضف هذا
 )
 
+from db_utils import get_template_settings, get_sections_with_projects
+
+
 
 # 📁 تحميل المتغيرات البيئية
 load_dotenv()
@@ -63,7 +66,26 @@ app.add_middleware(
 # 🏠 الصفحة الرئيسية
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+#    return templates.TemplateResponse("index.html", {"request": request})
+    
+    user_id = 1  # لاحقًا يمكن جعله ديناميكي
+    template_id = 1  # يفترض أن يكون معرف القالب Two Column Resume
+
+    # استدعاء إعدادات الطباعة لهذا المستخدم والقالب
+    print_settings = get_template_settings(user_id, template_id)
+
+    # استدعاء الأقسام والمشاريع
+    sections = get_sections_with_projects(user_id)
+
+    print("✅ SECTIONS FROM DB:", sections)
+    
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "print_settings": print_settings,
+        "sections": sections
+    })
+
+
 
 # 📄 عرض المشاريع
 @app.get("/projects")
@@ -126,13 +148,6 @@ def delete(project_id: int):
 
 
 
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    print_settings = get_print_settings()  # من controller
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "print_settings": print_settings
-    })
 
 
 
