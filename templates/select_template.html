@@ -1,0 +1,18 @@
+<!-- templates/select_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Templates</title>
+</head>
+<body>
+    <h1>Available Resume Templates</h1>
+    <ul>
+        {% for template_name in templates %}
+        <li>
+            <a href="/view/{{ template_name }}">{{ template_name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,1 @@
+INIT_SYSTEM = os.path.join(ROOT_DIR, "db", "init_system.py")

@@ -1,19 +1,37 @@
 // save.js
 const STORAGE_KEY = "tamer-resume-data";
 
-function createControlButtons({ showMove = true, moveType = "default" } = {}) {
-  const wrapper = document.createElement("span");
-  wrapper.className = "edit-button";
-  wrapper.innerHTML = `
-    <button data-delete>🗑️</button>
-    <button data-toggle-print>🙈 Hide from print</button>
-    ${showMove ? `
-      <button ${moveType === "project" ? "data-move-project-up" : "data-move-up"}>⬆️</button>
-      <button ${moveType === "project" ? "data-move-project-down" : "data-move-down"}>⬇️</button>
-    ` : ""}
+function createControlButtons(projectElement) {
+  const controlsContainer = projectElement.querySelector(".project-controls");
+  if (!controlsContainer) return;
+
+  controlsContainer.innerHTML = `
+    <button class="btn-delete">🗑️</button>
+    <button class="btn-hide">🙈</button>
+    <button class="btn-up">⬆️</button>
+    <button class="btn-down">⬇️</button>
   `;
-  return wrapper;
+
+  // ثم اربط الأحداث
+  controlsContainer.querySelector(".btn-delete").addEventListener("click", () => {
+    projectElement.remove();
+  });
+
+  controlsContainer.querySelector(".btn-hide").addEventListener("click", () => {
+    projectElement.classList.toggle("hidden-print");
+  });
+
+  controlsContainer.querySelector(".btn-up").addEventListener("click", () => {
+    const prev = projectElement.previousElementSibling;
+    if (prev) projectElement.parentNode.insertBefore(projectElement, prev);
+  });
+
+  controlsContainer.querySelector(".btn-down").addEventListener("click", () => {
+    const next = projectElement.nextElementSibling;
+    if (next) projectElement.parentNode.insertBefore(next, projectElement);
+  });
 }
+
 
 
 
@@ -95,21 +113,30 @@ function deleteBlock(btn) {
 }
 
 
-function togglePrint(btn) {
-  // حدد أقرب عنصر يمكن إخفاؤه بذكاء: مشروع، قسم، عنصر فرعي
-  const block = btn.closest(".project-box, .project-section, .left-column > div, li, ul, p, h3, h2");
+function togglePrint(button) {
+  const container = button.closest(".project, .left-box, .section");
 
-  if (!block) return;
+  if (!container) return;
 
-  // تحديد ما إذا كان سيتم الإخفاء أو الإظهار
-  const shouldHide = !block.classList.contains("no-print");
+  // ✅ معرفة الحالة الجديدة
+  const isHidden = container.classList.toggle("no-print");
+  const newPrintVisible = !isHidden;
 
-  // أضف أو أزل كلاس الإخفاء من العنصر المستهدف فقط
-  block.classList.toggle("no-print", shouldHide);
+  // ✅ تحديث شكل الزر
+  button.innerHTML = newPrintVisible ? "🙈" : "👁️";
 
-  // غيّر نص الزر
-  btn.textContent = shouldHide ? "👁️ Show in print" : "🙈 Hide from print";
+  // ✅ جلب sectionId و userId من الخصائص
+  const sectionId = container.getAttribute("data-section-id");
+  const userId = container.getAttribute("data-user-id");
+
+  // ✅ إذا كانت معلومة القسم موجودة، احفظها في قاعدة البيانات
+  if (sectionId && userId) {
+    updateSectionSetting(sectionId, userId, { print_visible: newPrintVisible });
+  }
 }
+
+
+
 
 function findMovableBlock(btn) {
   // إذا داخل المشروع وتحديدًا داخل أول .edit-button (أزرار المشروع نفسه)
@@ -380,6 +407,34 @@ window.addEventListener("DOMContentLoaded", () => {
   restoreContent();
   delegateEvents();
 });
+
+async function togglePrintVisibility(sectionId, userId, newValue) {
+    await fetch(`/section-settings/${sectionId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_id: userId,
+            print_visible: newValue
+        })
+    });
+    location.reload();
+}
+
+async function updateSectionSetting(sectionId, userId, updates) {
+    const res = await fetch(`/section-settings/${sectionId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, ...updates })
+    });
+    const data = await res.json();
+    console.log("✅ Updated section:", data);
+}
+
+
+
+
+
+
 
 
 

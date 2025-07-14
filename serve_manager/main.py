@@ -1,10 +1,14 @@
 import os
 import sys
 
-# 🧠 ضمان استخدام البيئة الافتراضية عند الحاجة (اختياري ولكن مفيد للتطوير اليدوي)
+# ضمان عمل المسارات (حل مشكلة ModuleNotFoundError)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# (اختياري لتطوير اليدوي داخل serve-manager مباشرة)
 venv_path = os.path.join(os.path.dirname(__file__), "venv", "Lib", "site-packages")
 if venv_path not in sys.path:
     sys.path.insert(0, venv_path)
+
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -29,6 +33,9 @@ from controller import (
 
 from db_utils import get_template_settings, get_sections_with_projects, get_template_path
 from fastapi.staticfiles import StaticFiles
+from api.routes import sections
+from api import user_resume_settings
+
 
 
 # 📁 تحميل المتغيرات البيئية
@@ -54,7 +61,8 @@ app = FastAPI()
 # 📦 تحميل الملفات الثابتة والقوالب
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
-
+app.include_router(sections.router)
+app.include_router(user_resume_settings.router)
 
 # 🧱 دعم تحميل ملفات CSS/JS من داخل كل القوالب تحت templates/*
 app.mount(
@@ -88,12 +96,11 @@ def get_templates_list():
 
 # 🏠 الصفحة الرئيسية
 @app.get("/", response_class=HTMLResponse)
-def list_templates(request: Request):
-    templates_list = get_templates_list()
-    return templates.TemplateResponse("select_template.html", {
-        "request": request,
-        "templates": templates_list
+def show_dashboard(request: Request):
+    return templates.TemplateResponse("index.html", {
+        "request": request
     })
+
 
 
 # 📄 عرض المشاريع

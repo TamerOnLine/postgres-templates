@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const leftColumn = document.querySelector(".left-column");
   const rightColumn = document.querySelector(".right-column");
 
-  // 🧩 تحميل الأقسام
-  const sections = await fetch(`${API_BASE}/sections`).then(res => res.json());
-
-  // 🧩 تحميل المشاريع والعناصر
-  const projects = await fetch(`${API_BASE}/projects`).then(res => res.json());
-  const items = await fetch(`${API_BASE}/items`).then(res => res.json());
+  // 🧩 تحميل الأقسام والمشاريع والعناصر
+  const [sections, projects, items] = await Promise.all([
+    fetch(`${API_BASE}/sections`).then(res => res.json()),
+    fetch(`${API_BASE}/projects`).then(res => res.json()),
+    fetch(`${API_BASE}/items`).then(res => res.json())
+  ]);
 
   for (const section of sections) {
     const sectionBox = document.createElement("div");
@@ -27,13 +27,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (sectionProjects.length) {
       for (const project of sectionProjects) {
         const div = document.createElement("div");
-        div.className = "project-item";
+        div.className = "project";
+        div.dataset.projectId = project.id;
         div.innerHTML = `
-          <h3>${project.title}</h3>
-          <p><strong>Company:</strong> ${project.company}</p>
-          <p><strong>From:</strong> ${project.from_date} → <strong>To:</strong> ${project.to_date}</p>
+          <div class="project-header">
+            <h3>${project.title}</h3>
+            <div class="project-controls no-print"></div>
+          </div>
           <p>${project.description}</p>
-          <a href="${project.link}" target="_blank">${project.link}</a>
+          <p><strong>${project.company}</strong></p>
+          ${project.link ? `<a href="${project.link}" target="_blank">🔗 ${project.link}</a>` : ""}
         `;
         sectionBox.appendChild(div);
       }
@@ -56,4 +59,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       leftColumn.appendChild(sectionBox);
     }
   }
+
+  // ✅ زرع أزرار التحكم لكل مشروع
+  setTimeout(() => {
+    document.querySelectorAll(".project").forEach(projectEl => {
+      if (typeof createControlButtons === "function") {
+        createControlButtons(projectEl);
+      }
+    });
+  }, 100);
 });

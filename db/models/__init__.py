@@ -12,3 +12,4 @@ from .user_item_settings import UserItemSettings
 from .user_project_settings import UserProjectSettings
 from .user_section_settings import UserSectionSettings
 from .user_template_print_settings import UserTemplatePrintSettings
+from .user_resume_settings import UserResumeSettings

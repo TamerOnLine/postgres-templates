@@ -2,15 +2,15 @@
   {
     "name": "Two Column Resume",
     "type": "html-server",
-    "path": "../templates/two-column-dynamic",
+    "path": "two-column-dynamic",
     "entry": ".",
     "port": 7001
   },
   {
-    "name": "j2",
+    "name": "tt",
     "type": "html-server",
-    "path": "../templates/j2",
+    "path": "templates/two-column-dynamic",
     "entry": ".",
-    "port": 7011
+    "port": 7022
   }
 ]

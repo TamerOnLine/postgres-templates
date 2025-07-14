@@ -1,83 +1,75 @@
-# PostgreSQL Database System for Resume Templates
+# 🗄️ DB System – Setup & Migration Guide
 
-This directory (`db/`) contains everything related to setting up and managing the PostgreSQL database used in the resume template system.
+This module handles all database-related operations including schema creation, Alembic migrations, and initialization scripts.
 
-## ✅ Features
+---
 
-- Automatic database creation if it doesn’t exist.
-- SQLAlchemy ORM with declarative model structure.
-- Alembic migrations for tracking schema changes.
-- Custom per-user settings for templates, sections, items, and print options.
-- Modular structure and portable integration.
+## 📦 Requirements
+- Python 3.11+
+- PostgreSQL running and accessible
+- The project-wide virtual environment is already created in: `postgres-templates/venv/`
+- Environment variables configured in `.env`
 
 ---
 
 ## 📁 Structure
 
-```plaintext
+```
 db/
-├── alembic/                  # Alembic migration files
-├── models/                   # SQLAlchemy models
-│   ├── user.py
-│   ├── template.py
-│   ├── section.py
-│   └── ...
-├── config.py                 # Database connection configuration
-├── setup.py                  # Virtual environment + installation + init + migrations
-├── init_system.py            # Creates DB + runs Base.metadata.create_all()
-├── requirements.txt
-└── README.md                 # This file
+├── alembic/                  ← Alembic migration versions
+├── alembic.ini               ← Alembic config file
+├── init_system.py            ← Initializes the database tables and defaults
+├── setup.py                  ← Runs full DB setup and migration
+├── config.py                 ← Loads DB settings from .env
+├── models/                   ← SQLAlchemy model definitions
 ```
 
 ---
 
 ## ⚙️ Setup Instructions
 
-```bash
-cd db
-python setup.py
-```
-
-This will:
-
-1. Create a virtual environment under `db/venv/` if not found.
-2. Install required dependencies.
-3. Initialize the PostgreSQL database and tables.
-4. Run Alembic migrations.
-
----
-
-## 🔄 Recreate Database
-
-To drop and recreate the database:
+### 1. Activate the project-wide virtual environment
 
 ```bash
-python setup.py
-# Choose: Drop → Create → Migrate
+# Windows
+.\serve-manager\env\Scripts\ctivate
+
+# Linux/macOS
+source serve-manager/venv/bin/activate
 ```
 
 ---
 
-## 🛠️ Technologies Used
+### 2. Run the setup script
 
-- PostgreSQL
-- SQLAlchemy
-- Alembic
-- Python 3.12+
-- dotenv (.env file support)
+```bash
+python db/setup.py
+```
 
----
-
-## 👤 Author-specific Settings
-
-Each user can have:
-
-- Global template print settings (`print_settings`)
-- Element-specific print preferences (`user_project_settings`, `user_item_settings`, etc.)
-- Full control over resume layout and visibility
+This script will:
+- Run `init_system.py` to initialize core tables
+- Execute Alembic migrations to bring the schema up to date
 
 ---
 
-## 📦 Deployment Note
+## 🛠️ Manual commands (if needed)
 
-This system is designed to be **portable**. You can embed it into any resume template project and it will auto-detect its context via paths and `.env`.
+### Run Alembic manually
+
+```bash
+alembic -c db/alembic.ini upgrade head
+```
+
+### Run initialization manually
+
+```bash
+python db/init_system.py
+```
+
+---
+
+## ✅ Notes
+
+- This DB system **uses the shared virtual environment at the project root**.
+- You **do not need to create a separate venv inside `db/`**.
+- Ensure database credentials are valid and reachable from `.env`.
